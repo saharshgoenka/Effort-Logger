@@ -75,7 +75,7 @@ public class MainLine extends Application {
                     	showHomeScreen();
                     } else {
                     	// password error
-                        statusLabel.setText("Password is wrong.");
+                        statusLabel.setText("Password is incorrect.");
                     }
                 } else {
                 	// user error

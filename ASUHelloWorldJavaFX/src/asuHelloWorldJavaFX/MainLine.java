@@ -31,7 +31,7 @@ public class MainLine extends Application {
     // Author: Saharsh Goenka
     // valid username and password
     private final String validUsername = "saharsh";
-    private final String hashedPassword = hashPassword("1234"); // Hashed password
+    private final String hashedPassword = hashPassword("123"); // Hashed password
 
     // Author: Saharsh Goenka
     // function shows the login page

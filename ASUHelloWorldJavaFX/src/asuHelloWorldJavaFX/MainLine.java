@@ -77,7 +77,7 @@ public class MainLine extends Application {
                     }
                 } else {
                 	// user error
-                    statusLabel.setText("User does not exist.");
+                    statusLabel.setText("User doesn't exist.");
                 }
             } else {
             	// backslash error

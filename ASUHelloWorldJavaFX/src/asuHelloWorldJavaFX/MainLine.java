@@ -7,6 +7,8 @@
 //
 //yuh
 // push to branch saharsh
+// comment
+// test comment
 
 package asuHelloWorldJavaFX;
 
@@ -24,7 +26,7 @@ public class MainLine extends Application {
 	public static void main(String[] args) {
         launch(args);
     }
-
+	//hello I was here
     private Stage primaryStage;
     //adwnkladhawhodiao
     //IKSUN HAWDOAIWDHW
@@ -73,11 +75,14 @@ public class MainLine extends Application {
                     	showHomeScreen();
                     } else {
                     	// password error
-                        statusLabel.setText("Password is wrong.");
+                        statusLabel.setText("Password is incorrect!!");
                     }
                 } else {
                 	// user error
-                    statusLabel.setText("User doesn't exist.");
+
+
+                    statusLabel.setText("User does not exist!!");
+
                 }
             } else {
             	// backslash error

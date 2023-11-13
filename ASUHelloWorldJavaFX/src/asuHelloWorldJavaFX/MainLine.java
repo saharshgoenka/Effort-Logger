@@ -1,3 +1,17 @@
+
+//Group Tu55
+//Saharsh Goenka
+//Darsh Agarwal
+//Chaitanyakrishna Yaramachu
+//Ik Sun Jeong
+//Naveen Ramesh
+//
+//yuh
+// push to branch saharsh
+// comment
+// test comment
+
+
 package asuHelloWorldJavaFX;
 
 import javafx.application.Application;
@@ -32,6 +46,22 @@ public class ASUHelloWorldJavaFX extends Application {
         launch(args);
     }
 
+	//hello I was here
+    private Stage primaryStage;
+    //adwnkladhawhodiao
+    //IKSUN HAWDOAIWDHW
+    // Author: Saharsh Goenka
+    // valid username and password
+    private final String validUsername = "saharsh";
+    private final String hashedPassword = hashPassword("123"); // Hashed password
+
+    // Author: Saharsh Goenka
+    // function shows the login page
+    // all requirements have been satisfied
+    	// user can only log-in with valid user name and password
+    	// hashing for addition security
+    	// SQL injection prevention implemented
+
     private void showLoginPage() {
         VBox loginLayout = createLayout("Effort Logger - Login");
 
@@ -52,10 +82,16 @@ public class ASUHelloWorldJavaFX extends Application {
                     if (hashPassword(password).equals(hashedPassword)) {
                         showHomeScreen();
                     } else {
-                        statusLabel.setText("Password is wrong.");
+
+                    	// password error
+                        statusLabel.setText("Password is incorrect!!");
                     }
                 } else {
-                    statusLabel.setText("User does not exist.");
+                	// user error
+
+
+                    statusLabel.setText("User does not exist!!");
+
                 }
             } else {
                 statusLabel.setText("SQL injection block.");

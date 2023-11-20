@@ -416,58 +416,54 @@ public class ASUHelloWorldJavaFX extends Application {
 
 
     private void showHistoricalDataPage() {
+    	
+    	// array of possible employees
         String[] workersArray = {"Saharsh", "Iksun", "Darsh", "Chaitanyakrishna", "Naveen"};
 
+        // title of the screen
         VBox historicalDataLayout = createLayout("Effort Logger - Historical Data");
 
+        // drop down menu
         ComboBox<String> tasksComboBox = new ComboBox<>();
-        // Populate tasksComboBox with your existing tasks
+        
+        // add tasks to drop down menu
         tasksComboBox.getItems().addAll(completedTasks);
         tasksComboBox.getItems().addAll(inCompletedTasks);
 
+        // drop down menu of the possible employees
         ComboBox<String> workersComboBox = new ComboBox<>();
         workersComboBox.getItems().addAll(workersArray);
 
+        // show text
         TextArea displayArea = new TextArea();
         displayArea.setEditable(false);
 
+        
+     // button to add the worker for the current task
         Button addButton = new Button("Add");
         addButton.setOnAction(event -> addSelectedDataToTextArea(tasksComboBox.getValue(), workersComboBox.getValue(), displayArea));
 
+        // takes user back to project planning page
         Button backButton = new Button("Back");
         backButton.setOnAction(event -> showProjectPlanningPage());
 
-        tasksComboBox.setOnAction(event -> updateDisplayArea(tasksComboBox.getValue(), workersComboBox.getValue(), displayArea));
-        workersComboBox.setOnAction(event -> updateDisplayArea(tasksComboBox.getValue(), workersComboBox.getValue(), displayArea));
-
+        // layout configuration of the entire page
         historicalDataLayout.getChildren().addAll(new Label("Select Task:"), tasksComboBox,
                 new Label("Select Worker:"), workersComboBox, displayArea, addButton, backButton);
 
+        displayArea.setText(String.join("\n", displayList));
+        // displays the layout
         showScene(historicalDataLayout);
     }
+    
 
+ // Modify the addSelectedDataToTextArea method
     private void addSelectedDataToTextArea(String selectedTask, String selectedWorker, TextArea displayArea) {
         if (selectedTask != null && selectedWorker != null) {
-            // Append the selected task and worker to the TextArea
-            displayArea.appendText("\n" + "Selected Task: " + selectedTask + ", Selected Worker: " + selectedWorker + "\n");
+            String data = "Selected Task: " + selectedTask + ", Selected Worker: " + selectedWorker;
+            displayList.add(data);
+            displayArea.setText(String.join("\n", displayList));
         }
-    }
-
-    private void updateDisplayArea(String selectedTask, String selectedWorker, TextArea displayArea) {
-        // Logic to get historical data based on selectedTask and selectedWorker
-        // Replace this with your actual logic to fetch and display historical data
-        String historicalData = getHistoricalData(selectedTask, selectedWorker);
-
-        // Display the data in the TextArea
-        displayArea.setText(historicalData);
-    }
-
-    private String getHistoricalData(String selectedTask, String selectedWorker) {
-        // Replace this with your actual logic to fetch historical data
-        // For example, you might have a data structure to store historical information
-        // and you can retrieve information based on the selectedTask and selectedWorker.
-        // Return the historical data as a string.
-        return "Task: " + selectedTask + "\nWorker: " + (selectedWorker != null ? selectedWorker : "Undefined Worker");
     }
 
 

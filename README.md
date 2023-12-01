@@ -1,3 +1,3 @@
 # Effort-Logger
 
-Authors: Saharsh Goenka, Naveen Ramesh, Darsh Agarwal, Chaitanya Yaramachu, Iksun Jeong
+Authors: Saharsh Goenka, Naveen Ramesh, Chaitanya Yaramachu, Iksun Jeong, Darsh Agarwal

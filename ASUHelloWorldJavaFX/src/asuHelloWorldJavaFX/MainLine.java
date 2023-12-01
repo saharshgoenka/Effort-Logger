@@ -1,16 +1,3 @@
-
-//Group Tu55
-//Saharsh Goenka
-//Darsh Agarwal
-//Chaitanyakrishna Yaramachu
-//Ik Sun Jeong
-//Naveen Ramesh
-//
-// push to branch saharsh
-// comment
-// test comment
-
-
 package asuHelloWorldJavaFX;
 
 import javafx.application.Application;
@@ -19,16 +6,35 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import javafx.util.Duration;
+
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.scene.control.ComboBox;
-
+import javafx.application.Application;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
+import javafx.animation.*;
+import javafx.animation.AnimationTimer;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ASUHelloWorldJavaFX extends Application {
+	private Label timerLabel = new Label("00:00:00");
+    private boolean isTimerRunning = false;
+    private ArrayList<String> allComplaints = new ArrayList<>();
 
+    private Map<String, String> credentials = new HashMap<>();
+
+    
     ArrayList<String> effortLog = new ArrayList<String>();
     ArrayList<String> completedTasks = new ArrayList<String>();
     ArrayList<String> inCompletedTasks = new ArrayList<String>();
@@ -40,82 +46,131 @@ public class ASUHelloWorldJavaFX extends Application {
     private ComboBox<String> commentsComboBox;
     private TextArea commentsArea;
     private TextField commentsField;
+    private long lastTime = 0;
+    private long elapsedTime = 0;
 
     public static void main(String[] args) {
         launch(args);
     }
+    private void handleSignUp(String newUsername, String newPassword) {
+        credentials.put(newUsername, hashPassword(newPassword));
 
-	//hello I was here
-    private Stage primaryStage;
-    //adwnkladhawhodiao
-    //IKSUN HAWDOAIWDHW
-    // Author: Saharsh Goenka
-    // valid username and password
-    private final String validUsername = "saharsh";
-    private final String hashedPassword = hashPassword("123"); // Hashed password
-
-    // Author: Saharsh Goenka
-    // function shows the login page
-    // all requirements have been satisfied
-    	// user can only log-in with valid user name and password
-    	// hashing for addition security
-    	// SQL injection prevention implemented
-
+        System.out.println("New Username: " + newUsername);
+        System.out.println("New Password: " + newPassword);
+    }
+    
     private void showLoginPage() {
         VBox loginLayout = createLayout("Effort Logger - Login");
+        loginLayout.setPrefHeight(450);
+        loginLayout.setSpacing(20);
 
         TextField usernameField = new TextField();
+        usernameField.setMinSize(200, 50);
         usernameField.setPromptText("Username");
+        usernameField.setMaxWidth(200);
+
         PasswordField passwordField = new PasswordField();
         passwordField.setPromptText("Password");
+        passwordField.setMinSize(200, 50);
+        passwordField.setMaxWidth(200);
 
         Button loginButton = new Button("Login");
-        Label statusLabel = new Label();
+        Button signUpButton = new Button("Sign Up!");
 
+        signUpButton.setOnAction(event -> showSignUpPage());
+
+        Label statusLabel = new Label();
         loginButton.setOnAction(event -> {
             String username = usernameField.getText();
             String password = passwordField.getText();
 
-            if (!password.contains("\\")) {
-                if (username.equals(validUsername)) {
-                    if (hashPassword(password).equals(hashedPassword)) {
-                        showHomeScreen();
-                    } else {
-
-                    	// password error
-                        statusLabel.setText("Password is incorrect!!");
-                    }
+            if (credentials.containsKey(username)) {
+                if (hashPassword(password).equals(credentials.get(username))) {
+                    showHomeScreen();
                 } else {
-                	// user error
-
-
-                    statusLabel.setText("User does not exist!!");
-
+                    statusLabel.setText("Password is wrong.");
                 }
             } else {
-                statusLabel.setText("SQL injection block.");
+                statusLabel.setText("User does not exist.");
             }
         });
 
-        loginLayout.getChildren().addAll(usernameField, passwordField, loginButton, statusLabel);
+        Label signUpLabel = new Label("If you don't have an account, please sign up here.");
+        
+        // Add the elements to the layout
+        loginLayout.getChildren().addAll(usernameField, passwordField, loginButton, statusLabel, signUpLabel, signUpButton);
         showScene(loginLayout);
     }
+    private void showSignUpPage() {
+        VBox signUpLayout = createLayout("Effort Logger - Sign Up");
 
+        TextField newUsernameField = new TextField();
+        newUsernameField.setPromptText("New Username");
+        newUsernameField.setMaxWidth(200);
+
+        PasswordField newPasswordField = new PasswordField();
+        newPasswordField.setPromptText("New Password");
+        newPasswordField.setMaxWidth(200);
+
+        Button signUpConfirmButton = new Button("Sign Up!");
+        signUpConfirmButton.setOnAction(event -> handleSignUp(newUsernameField.getText(), newPasswordField.getText()));
+
+        Button backButton = new Button("Back");
+        backButton.setOnAction(event -> showLoginPage());
+
+        signUpLayout.getChildren().addAll(newUsernameField, newPasswordField, signUpConfirmButton, backButton);
+        showScene(signUpLayout);
+    }
+    
+  
     private void showHomeScreen() {
         VBox homeLayout = createLayout("Effort Logger - Home");
 
         Button logEffortButton = new Button("Log Effort");
+        logEffortButton.setMinSize(100,50 );
         Button adminButton = new Button("Admin Page");
+        adminButton.setMinSize(100,50 );
         Button reportBugButton = new Button("Report a Bug");
+        reportBugButton.setMinSize(100,50 );
         Button projectPlanningButton = new Button("Project Planning");
+        projectPlanningButton.setMinSize(100,50 );
+        Button complaintButton = new Button("Complaint"); // New Complaint Button
+        complaintButton.setMinSize(100,50 );
 
+        // Set actions for the buttons
         projectPlanningButton.setOnAction(event -> showProjectPlanningPage());
         logEffortButton.setOnAction(event -> showEffortLoggerPage());
         adminButton.setOnAction(event -> showAdmin());
         reportBugButton.setOnAction(event -> showBugReportPage());
+        complaintButton.setOnAction(event -> showComplaintPage()); // Action for Complaint Button
 
-        homeLayout.getChildren().addAll(logEffortButton, adminButton, reportBugButton, projectPlanningButton);
+        // Add buttons to the layout
+        homeLayout.getChildren().addAll(logEffortButton, adminButton, reportBugButton, projectPlanningButton, complaintButton);
         showScene(homeLayout);
+    }
+
+    private void showComplaintPage() {
+        VBox complaintLayout = createLayout("Effort Logger - Submit Complaint");
+
+        TextArea complaintTextArea = new TextArea();
+        complaintTextArea.setPromptText("Type your complaint here");
+
+        Button submitButton = new Button("Submit");
+        submitButton.setOnAction(event -> submitComplaint(complaintTextArea.getText())); // Action for submitting the complaint
+
+        Button backButton = new Button("Back");
+        backButton.setOnAction(event -> showHomeScreen()); // Navigate back to the home page
+
+        complaintLayout.getChildren().addAll(complaintTextArea, submitButton, backButton);
+        showScene(complaintLayout);
+    }
+
+    private void submitComplaint(String complaintText) {
+        // Implement logic to handle the submitted complaint, e.g., store it, send it to a server, etc.
+        System.out.println("Submitted Complaint: " + complaintText);
+        allComplaints.add(complaintText); // Add complaint to the list of all complaints
+        
+        showHomeScreen(); // Return to the home page after submission
     }
 
     private void showEffortLoggerPage() {
@@ -126,10 +181,18 @@ public class ASUHelloWorldJavaFX extends Application {
 
         TextField durationField = new TextField();
         durationField.setPromptText("Duration (hours)");
+
         Button logButton = new Button("Log Effort");
 
         TextArea logArea = new TextArea();
         logArea.setEditable(false);
+
+        Button backButton = new Button("Back");
+        backButton.setOnAction(event -> showHomeScreen());
+
+        Button timeButton = new Button("Time");
+        timeButton.setOnAction(event -> startTimer());
+
 
         for (String log : effortLog) {
             logArea.appendText(log);
@@ -143,12 +206,51 @@ public class ASUHelloWorldJavaFX extends Application {
             durationField.clear();
             addPreviousRuns();
         });
+        
+        HBox buttonBox = new HBox(10);
+        buttonBox.getChildren().addAll(logButton, timeButton, timerLabel);
+        buttonBox.setAlignment(Pos.CENTER);
 
-        Button backButton = new Button("Back");
-        backButton.setOnAction(event -> showHomeScreen());
+        loggerLayout.getChildren().addAll(descriptionField, durationField, buttonBox, logArea, backButton);
+        loggerLayout.setSpacing(10);
+        loggerLayout.setAlignment(Pos.CENTER);
 
-        loggerLayout.getChildren().addAll(descriptionField, durationField, logButton, logArea, backButton);
         showScene(loggerLayout);
+    }
+
+
+
+    private void startTimer() {
+        if (!isTimerRunning) {
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+                updateTimer();
+            }));
+            timeline.setCycleCount(Timeline.INDEFINITE);
+            timeline.play();
+        } else {
+            // Stop the timer if it's already running
+            // For demonstration purposes, stopping the timer by pausing the label update
+        }
+        isTimerRunning = !isTimerRunning; // Toggle the timer state
+    }	
+    private void updateTimer() {
+        if (isTimerRunning) {
+            int seconds = Integer.parseInt(timerLabel.getText().substring(6, 8));
+            int minutes = Integer.parseInt(timerLabel.getText().substring(3, 5));
+            int hours = Integer.parseInt(timerLabel.getText().substring(0, 2));
+
+            seconds++;
+            if (seconds == 60) {
+                seconds = 0;
+                minutes++;
+                if (minutes == 60) {
+                    minutes = 0;
+                    hours++;
+                }
+            }
+
+            timerLabel.setText(String.format("%02d:%02d:%02d", hours, minutes, seconds));
+        }
     }
 
     private void addPreviousRuns() {
@@ -225,9 +327,32 @@ public class ASUHelloWorldJavaFX extends Application {
         Button removeEmployeeButton = new Button("Remove Employee");
         removeEmployeeButton.setOnAction(event -> showRemoveEmployeePage());
 
-        adminLayout.getChildren().addAll(new Label("Admin Page Content"), addEmployeeButton, removeEmployeeButton, backButton);
+        Button viewAllComplaintsButton = new Button("View All Complaints");
+        viewAllComplaintsButton.setOnAction(event -> showAllComplaintsPage()); // Updated action to show complaints within the app
+
+        adminLayout.getChildren().addAll(new Label("Admin Page Content"), addEmployeeButton, removeEmployeeButton, viewAllComplaintsButton, backButton);
         showScene(adminLayout);
     }
+    private void showAllComplaintsPage() {
+        VBox allComplaintsLayout = createLayout("Effort Logger - All Complaints");
+
+        TextArea allComplaintsArea = createTextArea(allComplaints);
+        allComplaintsArea.setEditable(false);
+
+        Button backButton = new Button("Back");
+        backButton.setOnAction(event -> showAdmin());
+
+        // Display all complaints
+        StringBuilder allComplaintsText = new StringBuilder();
+        for (String complaint : allComplaints) {
+            allComplaintsText.append(complaint).append("\n");
+        }
+        allComplaintsArea.setText(allComplaintsText.toString());
+
+        allComplaintsLayout.getChildren().addAll(allComplaintsArea, backButton);
+        showScene(allComplaintsLayout);
+    }	
+    
 
     private void showAddEmployeePage() {
         VBox addEmployeeLayout = createLayout("Add Employee");
@@ -388,11 +513,6 @@ public class ASUHelloWorldJavaFX extends Application {
         showScene(addCommentsLayout);
     }
 
-
-//    private void showRunsPage() {
-//        // Implement the logic to display completed and uncompleted runs page
-//    }
-
  // Inside your ASUHelloWorldJavaFX class:
 
     private void showTasksPage() {
@@ -414,58 +534,61 @@ public class ASUHelloWorldJavaFX extends Application {
     }
 
 
-    private void showHistoricalDataPage() {
-    	
-    	// array of possible employees
-        String[] workersArray = {"Saharsh", "Iksun", "Darsh", "Chaitanyakrishna", "Naveen"};
+    private ArrayList<String> displayList = new ArrayList<>();
 
-        // title of the screen
-        VBox historicalDataLayout = createLayout("Effort Logger - Historical Data");
 
-        // drop down menu
-        ComboBox<String> tasksComboBox = new ComboBox<>();
-        
-        // add tasks to drop down menu
-        tasksComboBox.getItems().addAll(completedTasks);
-        tasksComboBox.getItems().addAll(inCompletedTasks);
-
-        // drop down menu of the possible employees
-        ComboBox<String> workersComboBox = new ComboBox<>();
-        workersComboBox.getItems().addAll(workersArray);
-
-        // show text
-        TextArea displayArea = new TextArea();
-        displayArea.setEditable(false);
-
-        
-     // button to add the worker for the current task
-        Button addButton = new Button("Add");
-        addButton.setOnAction(event -> addSelectedDataToTextArea(tasksComboBox.getValue(), workersComboBox.getValue(), displayArea));
-
-        // takes user back to project planning page
-        Button backButton = new Button("Back");
-        backButton.setOnAction(event -> showProjectPlanningPage());
-
-        // layout configuration of the entire page
-        historicalDataLayout.getChildren().addAll(new Label("Select Task:"), tasksComboBox,
-                new Label("Select Worker:"), workersComboBox, displayArea, addButton, backButton);
-
-        displayArea.setText(String.join("\n", displayList));
-        // displays the layout
-        showScene(historicalDataLayout);
-    }
     
+    // Author: Saharsh Goenka
+       private void showHistoricalDataPage() {
+       	
+       	// array of possible employees
+           String[] workersArray = {"Saharsh", "Iksun", "Darsh", "Chaitanyakrishna", "Naveen"};
 
- // Modify the addSelectedDataToTextArea method
-    private void addSelectedDataToTextArea(String selectedTask, String selectedWorker, TextArea displayArea) {
-        if (selectedTask != null && selectedWorker != null) {
-            String data = "Selected Task: " + selectedTask + ", Selected Worker: " + selectedWorker;
-            displayList.add(data);
-            displayArea.setText(String.join("\n", displayList));
-        }
-    }
+           // title of the screen
+           VBox historicalDataLayout = createLayout("Effort Logger - Historical Data");
 
+           // drop down menu
+           ComboBox<String> tasksComboBox = new ComboBox<>();
+           
+           // add tasks to drop down menu
+           tasksComboBox.getItems().addAll(completedTasks);
+           tasksComboBox.getItems().addAll(inCompletedTasks);
 
+           // drop down menu of the possible employees
+           ComboBox<String> workersComboBox = new ComboBox<>();
+           workersComboBox.getItems().addAll(workersArray);
+
+           // show text
+           TextArea displayArea = new TextArea();
+           displayArea.setEditable(false);
+
+           
+        // button to add the worker for the current task
+           Button addButton = new Button("Add");
+           addButton.setOnAction(event -> addSelectedDataToTextArea(tasksComboBox.getValue(), workersComboBox.getValue(), displayArea));
+
+           // takes user back to project planning page
+           Button backButton = new Button("Back");
+           backButton.setOnAction(event -> showProjectPlanningPage());
+
+           // layout configuration of the entire page
+           historicalDataLayout.getChildren().addAll(new Label("Select Task:"), tasksComboBox,
+                   new Label("Select Worker:"), workersComboBox, displayArea, addButton, backButton);
+
+           displayArea.setText(String.join("\n", displayList));
+           // displays the layout
+           showScene(historicalDataLayout);
+       }
+       
+
+    // Modify the addSelectedDataToTextArea method
+       private void addSelectedDataToTextArea(String selectedTask, String selectedWorker, TextArea displayArea) {
+           if (selectedTask != null && selectedWorker != null) {
+               String data = "Selected Task: " + selectedTask + ", Selected Worker: " + selectedWorker;
+               displayList.add(data);
+               displayArea.setText(String.join("\n", displayList));
+           }
+       }
 
     private void showStrategiesPage() {
         VBox strategiesLayout = createLayout("Effort Logger - Previous Strategies");
@@ -501,24 +624,24 @@ public class ASUHelloWorldJavaFX extends Application {
 
 
     private VBox createLayout(String title) {
-        VBox layout = new VBox(10);
+    	VBox layout = new VBox(10);
         layout.setAlignment(Pos.CENTER);
-        layout.setStyle("-fx-padding: 20px; -fx-background-color: #f0f0f0;");
+        layout.setStyle("-fx-padding: 20px; -fx-background-color: #add8e6;"); // Changed background color to light blue
         Label titleLabel = new Label(title);
-        titleLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: bold;");
+        titleLabel.setStyle("-fx-font-size: 30px; -fx-font-weight: bold;");
         layout.getChildren().add(titleLabel);
         return layout;
     }
 
     private void showScene(Pane pane) {
-        Scene scene = new Scene(pane, 400, 300);
+        Scene scene = new Scene(pane, 800, 600);
         primaryStage.setScene(scene);
         primaryStage.setTitle(((VBox) pane).getChildren().get(0).toString().split("'")[1]); // Extract title from VBox
         primaryStage.show();
     }
 
-    private String validUsername = "saharsh";
-    private String hashedPassword = hashPassword("1234");
+//    private String validUsername = "saharsh";
+//    private String hashedPassword = hashPassword("1234");
 
     private String hashPassword(String password) {
         try {
@@ -543,5 +666,6 @@ public class ASUHelloWorldJavaFX extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         showLoginPage();
+        
     }
 }
